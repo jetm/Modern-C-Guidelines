@@ -18,7 +18,7 @@ It's important to not remain stuck in your "things I learned in the 80s/90s"
 mindset of C development.
 
 This page assumes you are on a modern platform conforming to modern standards
-and you have no excessive legacy compatibility requirements.  We shouldn't be
+and you have no excessive legacy compatibility requirements. We shouldn't be
 globally tied to ancient standards just because some companies refuse to
 upgrade 20 year old systems.
 
@@ -34,7 +34,7 @@ Standard c99 (c99 means "C Standard from 1999"; c11 means "C Standard from
     - clang compiles your source files faster than gcc
   - gcc requires you specify `-std=c99` or `-std=c11`
     - gcc builds source files slower than clang, but _sometimes_ generates
-      faster code.  Performance comparisons and regression testings are
+      faster code. Performance comparisons and regression testings are
       important.
     - gcc-5 defaults to `-std=gnu11`, but you should still specify a non-GNU
       `c99` or `c11` for practical usage.
@@ -42,7 +42,7 @@ Standard c99 (c99 means "C Standard from 1999"; c11 means "C Standard from
 ### Optimizations
 
   - -O2, -O3
-    - generally you want `-O2`, but sometimes you want `-O3`.  Test under both
+    - generally you want `-O2`, but sometimes you want `-O3`. Test under both
       levels (and across compilers) then keep the best performing binaries.
   - -Os
     - `-Os` helps if your concern is cache efficiency (which it should be)
@@ -62,7 +62,7 @@ Standard c99 (c99 means "C Standard from 1999"; c11 means "C Standard from
       new and wonderous ways.
   - extra fancy options include `-Wstrict-overflow -fno-strict-aliasing`
     - Either specify `-fno-strict-aliasing` or be sure to only access objects
-      as the type they have at creation.  Since so much existing C code aliases
+      as the type they have at creation. Since so much existing C code aliases
       across types, using `-fno-strict-aliasing` is a much safer bet if you
       don't control the entire underlying source tree.
   - as of now, Clang reports some valid syntax as a warning, so you should add
@@ -75,7 +75,7 @@ Standard c99 (c99 means "C Standard from 1999"; c11 means "C Standard from
     - The most common way of building C projects is to decompose every source
       file into an object file then link all the objects together at the end.
       This procedure works great for incremental development, but it is
-      suboptimal for performance and optimization.  Your compiler can't detect
+      suboptimal for performance and optimization. Your compiler can't detect
       potential optimization across file boundaries this way.
   - LTO — Link Time Optimization
     - LTO fixes the "source analysis and optimization across compilation units
@@ -142,16 +142,16 @@ literals is still `char *` even for multibyte sequences like `const char
 *abcgrr = u8"abc😬";`.
 
 #### Signedness
-At no point should you be typing the word `unsigned` into your code.  We can
+At no point should you be typing the word `unsigned` into your code. We can
 now write code without the ugly C convention of multi-word types that impair
-readability as well as usage.  Who wants to type `unsigned long long int` when
+readability as well as usage. Who wants to type `unsigned long long int` when
 you can type `uint64_t`?  The `<stdint.h>` types are more _explicit_, more
 _exact_ in meaning, convey _intentions_ better, and are more _compact_ for
 typographic _usage_ and _readability_.
 
 But, you may say, "I need to cast pointers to `long` for dirty pointer math!"
 
-You may say that.  But you are wrong.
+You may say that. But you are wrong.
 
 The correct type for pointer math is `uintptr_t` defined in `<stddef.h>`.
 
@@ -217,7 +217,7 @@ on all modern platforms, so on a 32-bit platform `size_t` is `uint32_t` and on
 a 64-bit platform `size_t` is `uint64_t`.
 
 There is also `ssize_t` which is a signed `size_t` used as the return value
-from library functions that return `-1` on error.  (Note: `ssize_t` is POSIX so
+from library functions that return `-1` on error. (Note: `ssize_t` is POSIX so
 does not apply to Windows interfaces.)
 
 So, should you use `size_t` for arbitrary system-dependent sizes in your own
@@ -302,7 +302,7 @@ void test(uint8_t input) {
 ```
 
 Caveat: if you have tight loops, test the placement of your initializers.
-Sometimes scattered declarations can cause unexpected slowdowns.  For regular
+Sometimes scattered declarations can cause unexpected slowdowns. For regular
 non-fast-path code (which is most of everything in the world), it's best to be
 as clear as possible, and defining types next to your initializations is a big
 readability improvement.
@@ -346,7 +346,7 @@ Do THIS instead:
 ```
 
 `#pragma once` tells the compiler to only include your header once and you *do
-not* need three lines of header guards anymore.  This pragma is widely
+not* need three lines of header guards anymore. This pragma is widely
 supported across all compilers across all platforms and is recommended over
 manually naming header guards.
 
@@ -397,9 +397,9 @@ Do THIS instead:
 ```
 
 **IMPORTANT NOTE**: If your struct has padding, the `{0}` method does not zero
-out extra padding bytes.  For example, `struct thing` has 4 bytes of padding
+out extra padding bytes. For example, `struct thing` has 4 bytes of padding
 after `counter` (on a 64-bit platform) because structs are padded to word-sized
-increments.  If you need to zero out an entire struct *including* unused
+increments. If you need to zero out an entire struct *including* unused
 padding, use `memset(&localThing, 0, sizeof(localThing))` because
 `sizeof(localThing) == 16 bytes` even though the addressable contents is only
 `8 + 4 = 12 bytes`.
@@ -448,13 +448,13 @@ Do THIS instead:
 ```
 
 **IMPORTANT CAVEAT:** variable length arrays are (usually) stack allocated just
-like regular arrays.  If you wouldn't create a 3 million element regular array
+like regular arrays. If you wouldn't create a 3 million element regular array
 statically, don't attempt to create a 3 million element array at runtime using
-this syntax.  These are not scalable python/ruby auto-growing lists.  If you
+this syntax. These are not scalable python/ruby auto-growing lists. If you
 specify a runtime array length and the length is too big for your stack, your
-program will do awful things (crashes, security issues).  Variable Length
+program will do awful things (crashes, security issues). Variable Length
 Arrays are convenient for small, single-purpose situations, but should not be
-relied on at scale in production software.  If sometimes you need a 3 element
+relied on at scale in production software. If sometimes you need a 3 element
 array and other times a 3 million element array, definitely do not use the
 variable length array capability.
 
@@ -472,7 +472,7 @@ VLA](https://en.wikipedia.org/wiki/Variable-length_array) capabilities rather
 than manually requesting heap memory from malloc.
 
 DOUBLE NOTE: there is no user input checking above, so the user can easily kill
-your program by allocating a giant VLA.  [Some
+your program by allocating a giant VLA. [Some
 people](https://twitter.com/comex/status/685423016981966848) go as far to call
 VLAs an anti-pattern, but if you keep your bounds tight, it can be a tiny win
 in certain situations.
@@ -511,9 +511,9 @@ void processAddBytesOverflow(void *input, uint32_t len) {
 ```
 
 The input types to your functions describe the _interface_ to your code, not
-what your code is doing with the parameters.  The interface to the code above
+what your code is doing with the parameters. The interface to the code above
 means "accept a byte array and a length", so you don't want to restrict your
-callers to only uint8_t byte streams.  Maybe your users even want to pass in
+callers to only uint8_t byte streams. Maybe your users even want to pass in
 old-style `char *` values or something else unexpected.
 
 By declaring your input type as `void *` and re-casting inside your function,
@@ -624,7 +624,7 @@ But, if your code isn't readable, nobody will *want* to help you.
 The solution here is to **always** use an automated code formatter.
 
 The only usable C formatter as of 2016 is
-[clang-format](http://clang.llvm.org/docs/ClangFormat.html).  clang-format has
+[clang-format](http://clang.llvm.org/docs/ClangFormat.html). clang-format has
 the best defaults of any automatic C formatter and is still actively developed.
 
 Here's my preferred script to run clang-format with good parameters:
@@ -660,7 +660,7 @@ find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) \
     | xargs -n12 -P4 cleanup-format -i
 ```
 
-Now, there's a new cleanup-tidy script there.  The contents of `cleanup-tidy` is:
+Now, there's a new cleanup-tidy script there. The contents of `cleanup-tidy` is:
 
 ```bash
 #!/usr/bin/env bash
@@ -675,16 +675,16 @@ clang-tidy \
 ```
 
 [clang-tidy](http://clang.llvm.org/extra/clang-tidy/) is policy driven code
-refactoring tool.  The options above enable two fixups:
+refactoring tool. The options above enable two fixups:
 
   - `readability-braces-around-statements` — force all `if`/`while`/`for`
     statement bodies to be enclosed in braces
     - It's an accident of history for C to have "brace optional" single
-      statements after loop constructs and conditionals.  It is *inexcusable*
+      statements after loop constructs and conditionals. It is *inexcusable*
       to write modern code without braces enforced on every loop and every
-      conditional.  Trying to argue "but, the compiler accepts it!" has
+      conditional. Trying to argue "but, the compiler accepts it!" has
       *nothing* to do with the readabiltiy, maintainability, understandability,
-      or skimability of code.  You aren't programming to please your compiler,
+      or skimability of code. You aren't programming to please your compiler,
       you are programming to please future people who have to maintain your
       current brain state years after everybody has forgotten why anything
       exists in the first place.
@@ -692,7 +692,7 @@ refactoring tool.  The options above enable two fixups:
     used in macro bodies
 
 `clang-tidy` is great when it works, but for some complex code bases it can get
-stuck.  Also, `clang-tidy` doesn't *format*, so you need to run `clang-format`
+stuck. Also, `clang-tidy` doesn't *format*, so you need to run `clang-format`
 after you tidy to align new braces and reflow macros.
 
 ### Readability
@@ -711,8 +711,8 @@ etc), adjust as necessary.
 
 #### Never use `malloc`
 
-You should always use `calloc`.  There is no performance penalty for getting
-zero'd memory.  If you don't like the function protype of `calloc(object count,
+You should always use `calloc`. There is no performance penalty for getting
+zero'd memory. If you don't like the function protype of `calloc(object count,
 size per object)` you can wrap it with `#define mycalloc(N) calloc(1, N)`.
 
 Readers have commented on a few things here:
@@ -731,8 +731,8 @@ and hardware devices.
 
 One advantage of using `calloc()` directly without a wrapper is, unlike
 `malloc()`, `calloc()` can check for integer overflow because it multiplies its
-arguments together to obtain your final allocation size.  If you are only
-allocating tiny things, wrapping `calloc()` is fine.  If you are allocating
+arguments together to obtain your final allocation size. If you are only
+allocating tiny things, wrapping `calloc()` is fine. If you are allocating
 potentially unbounded streams of data, you may want to retain the regular
 `calloc(element count, size of each element)` calling convention.
 
@@ -749,14 +749,14 @@ nice writeups:
 
 I still stand by my recommendation of always using `calloc()` for most common
 scenarios of 2016 (assumption: x64 target platforms, human-sized data, not
-including human genome-sized data).  Any deviations from "expected" drag us
+including human genome-sized data). Any deviations from "expected" drag us
 into the pit of despair of "domain knowledge," which are words we shan't speak
 this day.
 
 Subnote: The pre-zero'd memory delivered to you by `calloc()` is a one-shot
-deal.  If you `realloc()` your `calloc()` allocation, the grown memory extended
-by realloc is *not* new zero'd out memory.  Your grown allocation is filled
-with whatever regular uninitialized contents your kernel provides.  If you need
+deal. If you `realloc()` your `calloc()` allocation, the grown memory extended
+by realloc is *not* new zero'd out memory. Your grown allocation is filled
+with whatever regular uninitialized contents your kernel provides. If you need
 zero'd memory after a realloc, you must manually `memset()` the extent of your
 grown allocation.
 
@@ -764,7 +764,7 @@ grown allocation.
 
 Never `memset(ptr, 0, len)` when you can statically initialize a structure (or
 array) to zero (or reset it back to zero by assigning from a global zero'd out
-structure).  Though, `memset()` is your only choice if you need to zero out a
+structure). Though, `memset()` is your only choice if you need to zero out a
 struct containing padding (because `{0}` only sets defined fields, not padding
 bytes).
 
@@ -794,7 +794,7 @@ by Jens Gustedt at Inria.
 
 ### Closing
 
-Writing correct code at scale is essentially impossible.  We have multiple
+Writing correct code at scale is essentially impossible. We have multiple
 operating systems, runtimes, libraries, and hardware platforms to worry about
 without even considering things like random bit flips in RAM or our block
 devices lying to us with unknown probability.
